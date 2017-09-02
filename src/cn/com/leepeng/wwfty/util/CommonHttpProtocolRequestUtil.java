@@ -31,9 +31,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-
+/**
+ * 
+ * @author Mr.Lee
+ *
+ */
 @SuppressWarnings("deprecation")
-public class HttpUtil {
+public class CommonHttpProtocolRequestUtil {
 	 private static PoolingHttpClientConnectionManager connMgr;  
      private static RequestConfig requestConfig;  
      private static final int MAX_TIMEOUT = 7000;
@@ -54,12 +58,12 @@ public class HttpUtil {
          configBuilder.setConnectionRequestTimeout(MAX_TIMEOUT);  
          // 在提交请求之前 测试连接是否可用  
          configBuilder.setStaleConnectionCheckEnabled(true);
-         configBuilder.setProxy(new HttpHost("127.0.0.1",50814));
+         //configBuilder.setProxy(new HttpHost("127.0.0.1",50814));
          requestConfig = configBuilder.build(); 
          
      }  
      
-     public static String doPostSSL(String apiUrl, Map<String, Object> params) {  
+     public static String requestWithPost(String apiUrl, Map<String, Object> params) {  
          CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory()).setConnectionManager(connMgr).setDefaultRequestConfig(requestConfig).build();  
          HttpPost httpPost = new HttpPost(apiUrl);  
          CloseableHttpResponse response = null;  

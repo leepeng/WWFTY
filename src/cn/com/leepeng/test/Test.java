@@ -9,7 +9,7 @@ import cn.com.leepeng.wwfty.schema.FacebookData;
 import cn.com.leepeng.wwfty.schema.FacebookIndividualVideo;
 import cn.com.leepeng.wwfty.service.IFacebookService;
 import cn.com.leepeng.wwfty.service.impl.FacebookServiceImpl;
-import cn.com.leepeng.wwfty.util.HttpUtil;
+import cn.com.leepeng.wwfty.util.CommonHttpProtocolRequestUtil;
 
 public class Test {
 	public static void main(String[] args) {

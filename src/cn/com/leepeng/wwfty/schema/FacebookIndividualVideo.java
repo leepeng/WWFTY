@@ -4,6 +4,7 @@
  */
 package cn.com.leepeng.wwfty.schema;
 
+import cn.com.leepeng.wwfty.annotation.wechat.Data;
 import cn.com.leepeng.wwfty.enums.OriginalProjectionType;
 import cn.com.leepeng.wwfty.enums.UnpublishedContentType;
 import cn.com.leepeng.wwfty.enums.UploadPhaseType;
@@ -20,7 +21,8 @@ import cn.com.leepeng.wwfty.enums.UploadPhaseType;
  * /{page-id}/videos
  * /{group-id}/videos
  */
-public class FacebookIndividualVideo {
+@Data
+public class FacebookIndividualVideo implements Cloneable{
 	private String publishType;
 	/**
 	 * 会话ID
@@ -273,6 +275,10 @@ public class FacebookIndividualVideo {
 	}
 	public void setUploadphase(String uploadphase) {
 		this.uploadphase = uploadphase;
+	}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 	
 }

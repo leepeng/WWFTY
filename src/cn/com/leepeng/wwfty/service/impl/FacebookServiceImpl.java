@@ -11,8 +11,8 @@ import cn.com.leepeng.wwfty.schema.FacebookData;
 import cn.com.leepeng.wwfty.schema.FacebookIndividualVideo;
 import cn.com.leepeng.wwfty.service.IFacebookService;
 import cn.com.leepeng.wwfty.service.IService;
-import cn.com.leepeng.wwfty.util.HttpUtil;
-import cn.com.leepeng.wwfty.util.PropertiesUtil;
+import cn.com.leepeng.wwfty.util.CommonHttpProtocolRequestUtil;
+import cn.com.leepeng.wwfty.util.ConfigurationPropertiesUtil;
 import net.sf.json.JSONObject;
 
 /**
@@ -45,8 +45,8 @@ public class FacebookServiceImpl implements IService, IFacebookService {
 	@Override
 	public void publishVideo(FacebookData facebookData) {
 		FacebookIndividualVideo facebookIndividualVideo = facebookData.getFacebookIndividualVideo();
-		String accessUrl = PropertiesUtil.getProperties("Facebook.Video.PublishVideoUrl");
-		String graphApiVersion = PropertiesUtil.getProperties("Facebook.GraphAPI.Version");
+		String accessUrl = ConfigurationPropertiesUtil.getConfigProperties("Facebook.Video.PublishVideoUrl");
+		String graphApiVersion = ConfigurationPropertiesUtil.getConfigProperties("Facebook.GraphAPI.Version");
 		accessUrl = accessUrl + "/" + graphApiVersion + "/" + facebookData.getId()+ "/videos";
 		//开始阶段。通过启动会话开始可续传的上传。要发出 start 请求并创建视频上传会话，
 		//向 /{page_id || user_id || event_id || group_id}/videos 连线发出带有参数 
@@ -54,7 +54,7 @@ public class FacebookServiceImpl implements IService, IFacebookService {
 		params.put("upload_phase", facebookIndividualVideo.getUploadphase());
 		params.put("file_size", facebookIndividualVideo.getFileSize());
 		params.put("access_token", facebookData.getAccessToken());
-		String doPostSSL = HttpUtil.doPostSSL(accessUrl, params);
+		String doPostSSL = CommonHttpProtocolRequestUtil.requestWithPost(accessUrl, params);
 		JSONObject result = JSONObject.fromString(doPostSSL);
 		//获取上传会话的编号
 		//int int1 = result.getInt("upload_session_id");
