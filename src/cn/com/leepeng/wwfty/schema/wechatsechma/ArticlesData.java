@@ -7,8 +7,6 @@ import cn.com.leepeng.wwfty.annotation.wechat.Data;
 
 @Data(value = "ArticlesData")
 public class ArticlesData implements Cloneable{
-	@DataParam("articles")
-	private List<ArticlesData> articles;
 	@DataParam("thumb_media_id")
 	private String thumbMediaID;
 	@DataParam("author")
@@ -23,14 +21,6 @@ public class ArticlesData implements Cloneable{
 	private String digest;
 	@DataParam("show_cover_pic")
 	private String showCoverPic;
-
-	public List<ArticlesData> getArticles() {
-		return articles;
-	}
-
-	public void setArticles(List<ArticlesData> articles) {
-		this.articles = articles;
-	}
 
 	public String getThumbMediaID() {
 		return thumbMediaID;
