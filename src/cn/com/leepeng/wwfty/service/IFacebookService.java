@@ -15,7 +15,7 @@ import cn.com.leepeng.wwfty.schema.FacebookData;
  * @date 27th Aug,2017
  * 
  */
-public interface IFacebookService {
+public interface IFacebookService extends IService{
 	
 	/**
 	 * Represents an individual video on Facebook.

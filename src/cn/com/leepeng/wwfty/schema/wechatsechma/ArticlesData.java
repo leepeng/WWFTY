@@ -1,9 +1,7 @@
 package cn.com.leepeng.wwfty.schema.wechatsechma;
 
-import java.util.List;
-
-import cn.com.leepeng.wwfty.annotation.wechat.DataParam;
 import cn.com.leepeng.wwfty.annotation.wechat.Data;
+import cn.com.leepeng.wwfty.annotation.wechat.DataParam;
 
 @Data(value = "ArticlesData")
 public class ArticlesData implements Cloneable{
@@ -19,6 +17,8 @@ public class ArticlesData implements Cloneable{
 	private String content;
 	@DataParam("digest")
 	private String digest;
+	@DataParam("url")
+	private String url;
 	@DataParam("show_cover_pic")
 	private String showCoverPic;
 
@@ -76,6 +76,21 @@ public class ArticlesData implements Cloneable{
 
 	public void setShowCoverPic(String showCoverPic) {
 		this.showCoverPic = showCoverPic;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	@Override
+	public String toString() {
+		return "ArticlesData [thumbMediaID=" + thumbMediaID + ", author=" + author + ", title=" + title
+				+ ", contentSourceUrl=" + contentSourceUrl + ", content=" + content + ", digest=" + digest
+				+ ", showCoverPic=" + showCoverPic + "]";
 	}
 
 	@Override

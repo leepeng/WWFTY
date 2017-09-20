@@ -1,7 +1,13 @@
 package cn.com.leepeng.wwfty.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.cert.CertificateException;
@@ -9,6 +15,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
@@ -32,6 +39,10 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
@@ -109,7 +120,7 @@ public class CommonHttpProtocolRequestUtil {
 		return getResult(httpGet);
 	}
 
-	public static String requestWithGet(String url, Map<String, Object> headers, Map<String, Object> params){
+	public static String requestWithGet(String url, Map<String, Object> headers, Map<String, Object> params) {
 		URIBuilder ub = new URIBuilder();
 		ub.setPath(url);
 
@@ -214,7 +225,7 @@ public class CommonHttpProtocolRequestUtil {
 	 * @return
 	 */
 	private static String getResult(HttpRequestBase request) {
-		//CloseableHttpClient httpClient = HttpClients.createDefault();
+		// CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpClient client = HttpClientBuilder.create().build();
 		try {
 			HttpResponse response = client.execute(request);
@@ -222,16 +233,16 @@ public class CommonHttpProtocolRequestUtil {
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
 				// long len = entity.getContentLength();// -1 表示长度未知
-				return  EntityUtils.toString(entity);
+				return EntityUtils.toString(entity);
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			 if (request != null) {
-	                request.releaseConnection();
-	            }    
+			if (request != null) {
+				request.releaseConnection();
+			}
 		}
 
 		return EMPTY_STR;
@@ -243,5 +254,84 @@ public class CommonHttpProtocolRequestUtil {
 			pairs.add(new BasicNameValuePair(param.getKey(), String.valueOf(param.getValue())));
 		}
 		return pairs;
+	}
+
+	public static String postFile(String url, String serverFieldName, String localFilePath,
+			Map<String, String> params) {
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		String respStr = null;
+		HttpEntity resEntity = null;
+		CloseableHttpResponse response = null;
+		try {
+			HttpPost httppost = new HttpPost(url);
+			FileBody binFileBody = new FileBody(new File(localFilePath));
+
+			MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+			// add the file params
+			multipartEntityBuilder.addPart(serverFieldName, binFileBody);
+			// 设置上传的其他参数
+			setUploadParams(multipartEntityBuilder, params);
+
+			HttpEntity reqEntity = multipartEntityBuilder.build();
+			httppost.setEntity(reqEntity);
+
+			response = httpclient.execute(httppost);
+			System.out.println(response.getStatusLine());
+			resEntity = response.getEntity();
+			respStr = getRespString(resEntity);
+			EntityUtils.consume(resEntity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (httpclient != null) {
+					httpclient.close();
+				}
+				if(response !=null){
+					response.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return respStr;
+
+	}
+
+	/**
+	 * 设置上传文件时所附带的其他参数
+	 * 
+	 * @param multipartEntityBuilder
+	 * @param params
+	 */
+	private static void setUploadParams(MultipartEntityBuilder multipartEntityBuilder, Map<String, String> params) {
+		if (params != null && params.size() > 0) {
+			Set<String> keys = params.keySet();
+			for (String key : keys) {
+				multipartEntityBuilder.addPart(key, new StringBody(params.get(key), ContentType.TEXT_PLAIN));
+			}
+		}
+	}
+
+	/**
+	 * 将返回结果转化为String
+	 * 
+	 * @param entity
+	 * @return
+	 * @throws Exception
+	 */
+	private static String getRespString(HttpEntity entity) throws Exception {
+		if (entity == null) {
+			return null;
+		}
+		InputStream is = entity.getContent();
+		StringBuffer strBuf = new StringBuffer();
+		byte[] buffer = new byte[4096];
+		int r = 0;
+		while ((r = is.read(buffer)) > 0) {
+			strBuf.append(new String(buffer, 0, r, "UTF-8"));
+		}
+		return strBuf.toString();
 	}
 }

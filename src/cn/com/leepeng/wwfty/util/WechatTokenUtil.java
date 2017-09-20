@@ -22,6 +22,7 @@ public class WechatTokenUtil {
 		params.put("secret", appSecret);
 		String requestWithGet = CommonHttpProtocolRequestUtil.requestWithGet(tokenUrl, params);
 		JSONObject fromString = JSONObject.fromString(requestWithGet);
+		System.out.println(fromString);
 		return fromString.getString("access_token");
 		
 	}

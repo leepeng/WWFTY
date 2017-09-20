@@ -5,14 +5,16 @@
 package cn.com.leepeng.wwfty.service;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.com.leepeng.wwfty.exception.WechatException;
 import cn.com.leepeng.wwfty.schema.wechatsechma.ArticlesData;
 import cn.com.leepeng.wwfty.schema.wechatsechma.CustomServiceData;
+import cn.com.leepeng.wwfty.schema.wechatsechma.UploadMaterialResult;
 import net.sf.json.JSONObject;
 
 /**
- * 推送帖子到微博，微信，Facebook，Twitter YouTube服务基类
+ * 微信服务基类
  * 
  * @author LEEPENG
  * @since 1.0
@@ -20,8 +22,8 @@ import net.sf.json.JSONObject;
  * @date 27th Aug,2017
  * 
  */
-public interface IWechatService {
-
+public interface IWechatService extends IService {
+	
 	/**
 	 * 
 	 * 发送消息-客服信息
@@ -57,5 +59,24 @@ public interface IWechatService {
 	 * 
 	 * @return
 	 */
-	public JSONObject addPermanentTextMaterial(List<ArticlesData> articlesDatas,String token);
+	public JSONObject addPermanentTextMaterial(List<ArticlesData> articlesDatas, String token);
+
+	/**
+	 * 新增其他类型永久素材 接口调用请求说明
+	 * 通过POST表单来调用接口，表单id为media，包含需要上传的素材内容，有filename、filelength、content-type等信息。请注意：图片素材将进入公众平台官网素材管理模块中的默认分组。
+	 * @param localFilePath 本地文件路径
+	 * @param params 其它参数
+	 * @param type   上传素材类型 参见UploadMaterialResult类设置类型
+	 * @param token  签发令牌
+	 * @return UploadMaterialResult 返回上传的结果，包括上传后的media_id和URL以及上传失败的代码和错误信息
+	 */
+	public UploadMaterialResult addOtherMaterial(String localFilePath,Map<String, String> params,String type,String token);
+	
+	/**
+	 * 获取永久素材
+	 * @param mediaId 素材mediaId
+	 * @param token   签发令牌
+	 * @return 返回所有文章，多篇图文有多篇文章
+	 */
+	public List<ArticlesData> getAllArticlesData(String mediaId,String token);
 }

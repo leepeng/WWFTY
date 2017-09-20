@@ -10,7 +10,7 @@ import java.util.Map;
 import cn.com.leepeng.wwfty.schema.FacebookData;
 import cn.com.leepeng.wwfty.schema.FacebookIndividualVideo;
 import cn.com.leepeng.wwfty.service.IFacebookService;
-import cn.com.leepeng.wwfty.service.IService;
+import cn.com.leepeng.wwfty.util.AnnotationAnalysis;
 import cn.com.leepeng.wwfty.util.CommonHttpProtocolRequestUtil;
 import cn.com.leepeng.wwfty.util.ConfigurationPropertiesUtil;
 import net.sf.json.JSONObject;
@@ -24,7 +24,7 @@ import net.sf.json.JSONObject;
  * @date 27th Aug,2017
  * 
  */
-public class FacebookServiceImpl implements IService, IFacebookService {
+public class FacebookServiceImpl implements IFacebookService {
 
 	
 	/**
@@ -50,12 +50,10 @@ public class FacebookServiceImpl implements IService, IFacebookService {
 		accessUrl = accessUrl + "/" + graphApiVersion + "/" + facebookData.getId()+ "/videos";
 		//开始阶段。通过启动会话开始可续传的上传。要发出 start 请求并创建视频上传会话，
 		//向 /{page_id || user_id || event_id || group_id}/videos 连线发出带有参数 
-		Map<String, Object> params = new HashMap<>();
-		params.put("upload_phase", facebookIndividualVideo.getUploadphase());
-		params.put("file_size", facebookIndividualVideo.getFileSize());
-		params.put("access_token", facebookData.getAccessToken());
-		String doPostSSL = CommonHttpProtocolRequestUtil.requestWithPost(accessUrl, params);
-		JSONObject result = JSONObject.fromString(doPostSSL);
+		Map<String, Object> requestParametersMap = new AnnotationAnalysis<FacebookData>().getRequestParametersMap(FacebookData.class, facebookData);
+		
+		//String doPostSSL = CommonHttpProtocolRequestUtil.requestWithPost(accessUrl, params);
+		//JSONObject result = JSONObject.fromString(doPostSSL);
 		//获取上传会话的编号
 		//int int1 = result.getInt("upload_session_id");
 		//int int1 = result.getInt("video_id");

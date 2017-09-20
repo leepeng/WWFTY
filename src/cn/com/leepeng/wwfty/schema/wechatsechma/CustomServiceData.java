@@ -2,9 +2,13 @@ package cn.com.leepeng.wwfty.schema.wechatsechma;
 
 import cn.com.leepeng.wwfty.annotation.wechat.DataParam;
 import cn.com.leepeng.wwfty.annotation.wechat.Data;
+/**
+ * // 调用接口凭证
+ * @author Mr.Lee
+ *
+ */
 @Data("CustomServiceData")
 public class CustomServiceData implements Cloneable{
-	// 调用接口凭证
 	@DataParam(value = "access_token")
 	private String accessToken;
 	@DataParam(value = "kf_account")
