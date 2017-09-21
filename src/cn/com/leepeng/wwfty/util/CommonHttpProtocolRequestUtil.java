@@ -1,13 +1,9 @@
 package cn.com.leepeng.wwfty.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.cert.CertificateException;
@@ -51,8 +47,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 /**
+ * HTTP请求工具类。HTTPS忽略证书请求 httpclient 4.3
  * 
- * @author Mr.Lee
+ * @author LEEPENG
+ * @date 21st Sep,2017
+ * @mail lp@zving.com/leepeng@leepeng.com.cn
  *
  */
 public class CommonHttpProtocolRequestUtil {
@@ -75,6 +74,7 @@ public class CommonHttpProtocolRequestUtil {
 		configBuilder.setSocketTimeout(MAX_TIMEOUT);
 		// 设置从连接池获取连接实例的超时
 		configBuilder.setConnectionRequestTimeout(MAX_TIMEOUT);
+		//设置代理服务器，访问facebook，twitter等需要配置代理服务器IP和端口，如果是走专线此处不用设置
 		// configBuilder.setProxy(new HttpHost("127.0.0.1",50814));
 		requestConfig = configBuilder.build();
 
@@ -287,7 +287,7 @@ public class CommonHttpProtocolRequestUtil {
 				if (httpclient != null) {
 					httpclient.close();
 				}
-				if(response !=null){
+				if (response != null) {
 					response.close();
 				}
 			} catch (IOException e) {

@@ -122,7 +122,9 @@ public class WechatServiceImpl implements IWechatService {
 		WechatServiceImpl impl = new WechatServiceImpl();
 		String accessToken = WechatTokenUtil.getAccessToken("wxb9b37c5e268617f5", "5d0fda82e91a0f346511dcc0e60b23d3");
 		 UploadMaterialResult addOtherMaterial =
-		 impl.addOtherMaterial("C:\\Users\\Mr.Lee\\Desktop\\music2.mp3", null,UploadMaterialType.IMAGE, accessToken);
+//		 impl.addOtherMaterial("C:\\Users\\Mr.Lee\\Desktop\\music2.mp3", null,UploadMaterialType.VOICE, accessToken);
+//		 impl.addOtherMaterial("C:\\Users\\Mr.Lee\\Desktop\\2.jpg", null,UploadMaterialType.IMAGE, accessToken);
+		 impl.addOtherMaterial("http://blog.leepeng.com.cn/wp-content/uploads/2017/09/24493956_1376530423419.jpg", null,UploadMaterialType.IMAGE, accessToken);
 		 // System.out.println(addOtherMaterial.getMessage());
 		 System.out.println("====" + addOtherMaterial.getErrcode());
 		 System.out.println("====" + addOtherMaterial.getErrmsg());
@@ -130,11 +132,11 @@ public class WechatServiceImpl implements IWechatService {
 		 System.out.println("====" + addOtherMaterial.getUrl());
 //		List<ArticlesData> allArticlesData = impl.getAllArticlesData("mAB1BDp5w0L1QXr_Sh7OTYn-pdDZc7YWXAezHaMg4N8",
 //				accessToken);
-		List<ArticlesData> allArticlesData = impl.getAllArticlesData(addOtherMaterial.getMedia_id(),
-				accessToken);
-		for (ArticlesData articlesData : allArticlesData) {
-			System.out.println(articlesData.toString());
-		}
+//		List<ArticlesData> allArticlesData = impl.getAllArticlesData(addOtherMaterial.getMedia_id(),
+//				accessToken);
+//		for (ArticlesData articlesData : allArticlesData) {
+//			System.out.println(articlesData.toString());
+//		}
 	}
 
 	@Override
