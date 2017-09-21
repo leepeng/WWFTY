@@ -1,4 +1,4 @@
-package cn.com.leepeng.wwfty.schema.wechatsechma;
+package cn.com.leepeng.wwfty.schema.wechat;
 
 import cn.com.leepeng.wwfty.annotation.wechat.DataParam;
 import cn.com.leepeng.wwfty.annotation.wechat.Data;

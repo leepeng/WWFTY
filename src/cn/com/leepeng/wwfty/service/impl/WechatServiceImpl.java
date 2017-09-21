@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import cn.com.leepeng.wwfty.exception.WechatException;
-import cn.com.leepeng.wwfty.schema.wechatsechma.ArticlesData;
-import cn.com.leepeng.wwfty.schema.wechatsechma.CustomServiceData;
-import cn.com.leepeng.wwfty.schema.wechatsechma.UploadMaterialResult;
-import cn.com.leepeng.wwfty.schema.wechatsechma.UploadMaterialType;
+import cn.com.leepeng.wwfty.schema.wechat.ArticlesData;
+import cn.com.leepeng.wwfty.schema.wechat.CustomServiceData;
+import cn.com.leepeng.wwfty.schema.wechat.UploadMaterialResult;
+import cn.com.leepeng.wwfty.schema.wechat.UploadMaterialType;
 import cn.com.leepeng.wwfty.service.IWechatService;
 import cn.com.leepeng.wwfty.util.AnnotationAnalysis;
 import cn.com.leepeng.wwfty.util.CommonHttpProtocolRequestUtil;

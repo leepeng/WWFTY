@@ -1,4 +1,4 @@
-package cn.com.leepeng.wwfty.schema;
+package cn.com.leepeng.wwfty.schema.facebook;
 
 public class FacebookData {
 	

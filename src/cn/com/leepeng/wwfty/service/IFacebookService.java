@@ -4,7 +4,7 @@
  */
 package cn.com.leepeng.wwfty.service;
 
-import cn.com.leepeng.wwfty.schema.FacebookData;
+import cn.com.leepeng.wwfty.schema.facebook.FacebookData;
 
 /**
  * 推送帖子到微博，微信，Facebook，Twitter YouTube服务基类

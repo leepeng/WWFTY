@@ -1,4 +1,4 @@
-package cn.com.leepeng.wwfty.schema.wechatsechma;
+package cn.com.leepeng.wwfty.schema.wechat;
 
 public class UploadMaterialResult {
 	private String media_id;

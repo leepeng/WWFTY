@@ -11,10 +11,10 @@ import java.util.Map;
 
 import cn.com.leepeng.wwfty.annotation.wechat.Data;
 import cn.com.leepeng.wwfty.annotation.wechat.DataParam;
-import cn.com.leepeng.wwfty.schema.FacebookData;
-import cn.com.leepeng.wwfty.schema.FacebookIndividualVideo;
-import cn.com.leepeng.wwfty.schema.wechatsechma.ArticlesData;
-import cn.com.leepeng.wwfty.schema.wechatsechma.CustomServiceData;
+import cn.com.leepeng.wwfty.schema.facebook.FacebookData;
+import cn.com.leepeng.wwfty.schema.facebook.FacebookIndividualVideo;
+import cn.com.leepeng.wwfty.schema.wechat.ArticlesData;
+import cn.com.leepeng.wwfty.schema.wechat.CustomServiceData;
 
 /**
  * 参数封装数据类注解解析器

@@ -2,7 +2,7 @@
  * Copyright (c) 2016, 2017, LEEPENG and/or its affiliates. All rights reserved.
  * LEEPENG PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
-package cn.com.leepeng.wwfty.schema;
+package cn.com.leepeng.wwfty.schema.facebook;
 
 import cn.com.leepeng.wwfty.annotation.wechat.Data;
 import cn.com.leepeng.wwfty.enums.OriginalProjectionType;
