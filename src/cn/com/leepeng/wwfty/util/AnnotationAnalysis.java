@@ -15,6 +15,7 @@ import cn.com.leepeng.wwfty.schema.facebook.FacebookData;
 import cn.com.leepeng.wwfty.schema.facebook.FacebookIndividualVideo;
 import cn.com.leepeng.wwfty.schema.wechat.ArticlesData;
 import cn.com.leepeng.wwfty.schema.wechat.CustomServiceData;
+import cn.com.leepeng.wwfty.schema.weibo.AOauth2Token;
 
 /**
  * 参数封装数据类注解解析器
@@ -63,6 +64,9 @@ public class AnnotationAnalysis<T> {
 								FacebookData facebookData = (FacebookData) data;
 								/// value =
 								// clazz.getDeclaredMethod(_target_method).invoke(facebookData.clone());
+							}else if(data instanceof AOauth2Token){
+								AOauth2Token aOauth2 = (AOauth2Token) data;
+								value = clazz.getDeclaredMethod(_target_method).invoke(aOauth2.clone());
 							}
 							_paramsMap.put(dataParam.value(), (!"".equals(value) && value != null) ? value : "");
 						}

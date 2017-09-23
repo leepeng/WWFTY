@@ -157,7 +157,8 @@ public class CommonHttpProtocolRequestUtil {
 			response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				return null;
+				//return null;
+				throw new Exception(response.toString());
 			}
 			HttpEntity entity = response.getEntity();
 			if (entity == null) {
