@@ -6,8 +6,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -43,7 +46,7 @@ public class WeiboTokenUtil {
 	}
 
 	/**
-	 * 获取token工具类
+	 * 新浪微博获取token工具类
 	 * 
 	 * @param oauth2Token
 	 * @return 返回token
@@ -64,18 +67,18 @@ public class WeiboTokenUtil {
 			authorizeUrl = ConfigurationPropertiesUtil.getConfigProperties("weibo.api.oauth2.authorize.token");
 			requestParametersMap = new AnnotationAnalysis<AOauth2Token>().getRequestParametersMap(AOauth2Token.class,
 					oauth2Token);
-			authorizeUrl = endUrlAppendParams(authorizeUrl, requestParametersMap);
-			String result = CommonHttpProtocolRequestUtil.requestWithPost(authorizeUrl, new HashMap<>());
+			authorizeUrl = ParameterUtil.endUrlAppendParams(authorizeUrl, requestParametersMap);
+			String result = CommonHttpProtocolRequestUtil.requestWithPost(authorizeUrl, new HashMap<String,Object>());
 			if (StringUtils.isNotEmpty(result)) {
-				JSONObject object = JSONObject.fromString(result);
+				JSONObject resultObject = JSONObject.fromString(result);
 				try {
-					authResult = (AOauth2Token.OAuthResult) JSONObject.toBean(object, AOauth2Token.OAuthResult.class);
+					authResult = (AOauth2Token.OAuthResult) JSONObject.toBean(resultObject, AOauth2Token.OAuthResult.class);
 					if (authResult != null) {
 						readOrWriteTokenTempFile(authResult, true);
 						return authResult.getAccess_token();
 					}
 				} catch (Exception e) {
-					apiResult = (WeiboInvokeAPIResult) JSONObject.toBean(object, WeiboInvokeAPIResult.class);
+					apiResult = (WeiboInvokeAPIResult) JSONObject.toBean(resultObject, WeiboInvokeAPIResult.class);
 					checkHasException(apiResult);
 				}
 			}
@@ -143,26 +146,7 @@ public class WeiboTokenUtil {
 		return null;
 	}
 
-	/**
-	 * URL后拼接参数，获取token时，请求体中的参数必须为空
-	 * 
-	 * @param url
-	 *            传入的URL
-	 * @param requestParametersMap
-	 *            所有参数集合
-	 * @return 返回拼接好的URL
-	 */
-	private static String endUrlAppendParams(String url, Map<String, Object> requestParametersMap) {
-		if (!url.endsWith("?")) {
-			url += "?";
-		}
-		StringBuffer urlbuf = new StringBuffer(url);
-		for (Map.Entry<String, Object> param : requestParametersMap.entrySet()) {
-			urlbuf.append(param.getKey() + "=" + param.getValue());
-			urlbuf.append("&");
-		}
-		return urlbuf.substring(0, urlbuf.length() - 1);
-	}
+
 
 	public static void main(String[] args) {
 		AOauth2Token oauth2 = new AOauth2Token();
@@ -171,8 +155,11 @@ public class WeiboTokenUtil {
 		oauth2.setCode("b0fc3d6fc067af8a4db58bb64298cc71");
 		oauth2.setRedirectUri("http://www.leepeng.com.cn");
 		oauth2.setGrantType("authorization_code");
-
+		List<String> G7 = Arrays.asList("USA", "Japan", "France", "Germany", "Italy", "U.K.","Canada");
+		String G7Countries = G7.stream().map(x -> x.toUpperCase()).collect(Collectors.joining(", "));
+		System.out.println(G7Countries);
 		String accessToken = getAccessToken(oauth2);
 		System.out.println("==========================" + accessToken);
+		new Thread(()->System.out.println("cccccccccc")).start();
 	}
 }

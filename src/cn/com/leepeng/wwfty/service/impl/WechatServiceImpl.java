@@ -15,6 +15,7 @@ import cn.com.leepeng.wwfty.service.IWechatService;
 import cn.com.leepeng.wwfty.util.AnnotationAnalysis;
 import cn.com.leepeng.wwfty.util.CommonHttpProtocolRequestUtil;
 import cn.com.leepeng.wwfty.util.ConfigurationPropertiesUtil;
+import cn.com.leepeng.wwfty.util.ParameterUtil;
 import cn.com.leepeng.wwfty.util.WechatTokenUtil;
 import cn.com.leepeng.wwfty.util.WechatUtil;
 import net.sf.json.JSONArray;
@@ -105,9 +106,11 @@ public class WechatServiceImpl implements IWechatService {
 		String addOtherMaterialUrl = null;
 		UploadMaterialResult materialResult = null;
 		try {
-			addOtherMaterialUrl = ConfigurationPropertiesUtil
-					.getConfigProperties("Wechat.SourceMaterial.AddOtherMaterial");
-			addOtherMaterialUrl = addOtherMaterialUrl + "?access_token=" + token + "&type=" + type;
+			addOtherMaterialUrl = ConfigurationPropertiesUtil.getConfigProperties("Wechat.SourceMaterial.AddOtherMaterial");
+			Map<String, Object> requestParametersMap = new HashMap<>();
+			requestParametersMap.put("access_token", token);
+			requestParametersMap.put("type", type);
+			addOtherMaterialUrl = ParameterUtil.endUrlAppendParams(addOtherMaterialUrl, requestParametersMap);
 			String postFile = CommonHttpProtocolRequestUtil.postFile(addOtherMaterialUrl, MEDIA, localFilePath, params);
 			JSONObject jsonObject = JSONObject.fromString(postFile);
 			materialResult = (UploadMaterialResult) JSONObject.toBean(jsonObject, UploadMaterialResult.class);

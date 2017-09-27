@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016, 2017, LEEPENG and/or its affiliates. All rights reserved.
+ * LEEPENG PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
 package cn.com.leepeng.wwfty.schema.weibo;
 
 import cn.com.leepeng.wwfty.annotation.wechat.Data;
@@ -6,7 +10,16 @@ import cn.com.leepeng.wwfty.annotation.wechat.DataParam;
 /**
  * 新浪微博Oauth2身份验证
  * 
- * @author LEEPENG
+ * 技术支持：阿里云计算，新浪公司开放平台；微信公众平台，Facebook，twitter，YoTube
+ * http://www.sina.com.cn
+ * http://www.zving.com
+ * https://www.leepeng.com.cn
+ * ********************************************
+ * @author <a href="https://www.leepeng.com.cn">李鹏(LEEPENG)</a>
+ * @date 24th Sep,2017
+ * @mail leepeng@leepeng.com.cn
+ * @version 2.0
+ * @copyright © 2016-2017 LEEPENG
  *
  */
 @Data(value = "AOauth2")
