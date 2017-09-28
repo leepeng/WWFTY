@@ -4,8 +4,8 @@
  */
 package cn.com.leepeng.wwfty.schema.weibo;
 
-import cn.com.leepeng.wwfty.annotation.wechat.Data;
-import cn.com.leepeng.wwfty.annotation.wechat.DataParam;
+import cn.com.leepeng.wwfty.annotation.Data;
+import cn.com.leepeng.wwfty.annotation.DataParam;
 
 /**
  * 新浪微博Oauth2身份验证

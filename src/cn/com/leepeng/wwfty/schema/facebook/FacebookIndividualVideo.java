@@ -4,7 +4,7 @@
  */
 package cn.com.leepeng.wwfty.schema.facebook;
 
-import cn.com.leepeng.wwfty.annotation.wechat.Data;
+import cn.com.leepeng.wwfty.annotation.Data;
 import cn.com.leepeng.wwfty.enums.OriginalProjectionType;
 import cn.com.leepeng.wwfty.enums.UnpublishedContentType;
 

@@ -6,6 +6,8 @@ package cn.com.leepeng.wwfty.service;
 
 import java.util.List;
 
+import cn.com.leepeng.wwfty.schema.weibo.MediaData;
+
 /**
  * 微博服务基类
  * 27th Sep,2017
@@ -25,5 +27,5 @@ public interface IWeiboService extends IService {
 	/**
 	 * 
 	 */
-	public void uploadMultimedia();
+	public void uploadMultimedia(MediaData mediaData);
 }

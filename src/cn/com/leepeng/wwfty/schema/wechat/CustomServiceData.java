@@ -1,7 +1,7 @@
 package cn.com.leepeng.wwfty.schema.wechat;
 
-import cn.com.leepeng.wwfty.annotation.wechat.DataParam;
-import cn.com.leepeng.wwfty.annotation.wechat.Data;
+import cn.com.leepeng.wwfty.annotation.Data;
+import cn.com.leepeng.wwfty.annotation.DataParam;
 /**
  * // 调用接口凭证
  * @author Mr.Lee

@@ -1,12 +1,12 @@
-package cn.com.leepeng.wwfty.annotation.wechat;
+package cn.com.leepeng.wwfty.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DataParam {
+public @interface Data {
 	String value() default "";
 }

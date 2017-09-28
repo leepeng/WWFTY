@@ -1,24 +1,30 @@
 package cn.com.leepeng.wwfty.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -34,7 +40,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
@@ -43,6 +48,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -55,6 +61,16 @@ import org.apache.http.util.EntityUtils;
  *
  */
 public class CommonHttpProtocolRequestUtil {
+	public static final int http_ok = 200;// 返回状态码正常
+
+	public static final int CONNECTION_TIMEOUT = 5000;// 连接超时
+
+	public static final int READDATA_TIMEOUT = 10000;// 数据读取等待超时
+
+	public static final int DEFAULT_HTTP_PORT = 80;// http端口
+
+	public static final int DEFAULT_HTTPS_PORT = 443;// https端口
+
 	private static String EMPTY_STR = "";
 	private static PoolingHttpClientConnectionManager connMgr;
 	private static RequestConfig requestConfig;
@@ -74,7 +90,7 @@ public class CommonHttpProtocolRequestUtil {
 		configBuilder.setSocketTimeout(MAX_TIMEOUT);
 		// 设置从连接池获取连接实例的超时
 		configBuilder.setConnectionRequestTimeout(MAX_TIMEOUT);
-		//设置代理服务器，访问facebook，twitter等需要配置代理服务器IP和端口，如果是走专线此处不用设置
+		// 设置代理服务器，访问facebook，twitter等需要配置代理服务器IP和端口，如果是走专线此处不用设置
 		// configBuilder.setProxy(new HttpHost("127.0.0.1",50814));
 		requestConfig = configBuilder.build();
 
@@ -86,8 +102,11 @@ public class CommonHttpProtocolRequestUtil {
 	 * @return
 	 */
 	private static CloseableHttpClient getHttpClient() {
-		return HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory()).setConnectionManager(connMgr)
-				.setDefaultRequestConfig(requestConfig).build();
+		// return
+		// HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory()).setConnectionManager(connMgr)
+		// .setDefaultRequestConfig(requestConfig).build();
+
+		return createSSLConnSocketFactory();
 	}
 
 	/**
@@ -157,7 +176,7 @@ public class CommonHttpProtocolRequestUtil {
 			response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				//return null;
+				// return null;
 				throw new Exception(response.toString());
 			}
 			HttpEntity entity = response.getEntity();
@@ -185,38 +204,33 @@ public class CommonHttpProtocolRequestUtil {
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
-	private static SSLConnectionSocketFactory createSSLConnSocketFactory() {
-		SSLConnectionSocketFactory sslsf = null;
+	private static CloseableHttpClient createSSLConnSocketFactory() {
 		try {
 			SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-
-				public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+				// 默认信任所有证书
+				public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
 					return true;
 				}
 			}).build();
-			sslsf = new SSLConnectionSocketFactory(sslContext, new X509HostnameVerifier() {
-
-				@Override
-				public boolean verify(String arg0, SSLSession arg1) {
-					return true;
-				}
-
-				@Override
-				public void verify(String host, SSLSocket ssl) throws IOException {
-				}
-
-				@Override
-				public void verify(String host, X509Certificate cert) throws SSLException {
-				}
-
-				@Override
-				public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
-				}
-			});
-		} catch (GeneralSecurityException e) {
+			// AllowAllHostnameVerifier: 这种方式不对主机名进行验证，验证功能被关闭，是个空操作(域名验证)
+			SSLConnectionSocketFactory sslcsf = new SSLConnectionSocketFactory(sslContext,
+					SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			return HttpClients.custom().setSSLSocketFactory(sslcsf).build();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
 			e.printStackTrace();
 		}
-		return sslsf;
+		return HttpClients.createDefault();
+	}
+	
+	private static List<Header> defaultHeader() {
+	    ArrayList<Header> headers = new ArrayList<Header>();
+	    Header header = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
+	    headers.add(header);
+	    return headers;
 	}
 
 	/**
@@ -335,4 +349,62 @@ public class CommonHttpProtocolRequestUtil {
 		}
 		return strBuf.toString();
 	}
+
+	/**
+	 * 无需本地证书keyStore的SSL https带参数请求
+	 * 
+	 * @param url
+	 * @param paramsMap
+	 * @param encoding
+	 * @return
+	 */
+	public static String postSSLUrlWithParams(String url, Map<String, String> reqMap, String encoding) {
+		CloseableHttpClient httpClient = getHttpClient();
+		HttpPost post = new HttpPost(url);
+		// 添加参数
+		List<NameValuePair> params = new ArrayList<>();
+		if (reqMap != null && reqMap.keySet().size() > 0) {
+			Iterator<Map.Entry<String, String>> iter = reqMap.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry<String, String> entity = iter.next();
+				params.add(new BasicNameValuePair(entity.getKey(), entity.getValue()));
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = null;
+		try {
+			// 设置客户端请求的头参数getParams已经过时,现在用requestConfig对象替换
+			//httpClient.getParams().setParameter("Content-Type","application/x-www-form-urlencoded");
+			RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(CONNECTION_TIMEOUT)
+					.setSocketTimeout(READDATA_TIMEOUT).build();
+			post.setConfig(requestConfig);
+			// 设置编码格式
+			post.setEntity(new UrlEncodedFormEntity(params, encoding));
+			HttpResponse response = httpClient.execute(post);
+			HttpEntity httpEntity = response.getEntity();
+			br = new BufferedReader(new InputStreamReader(httpEntity.getContent(), encoding));
+			String s = null;
+			while ((s = br.readLine()) != null) {
+				sb.append(s);
+			}
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("指定的编码集不对,您目前指定的编码集是:" + encoding);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			throw new RuntimeException("读取流文件异常", e);
+		} catch (Exception e) {
+			throw new RuntimeException("通讯未知系统异常", e);
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return sb.toString();
+	}
+
 }

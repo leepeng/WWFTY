@@ -33,10 +33,11 @@ public class WechatServiceImpl implements IWechatService {
 	@Override
 	public JSONObject addCustomServiceAccount(CustomServiceData customServiceData) {
 		String addUrl = ConfigurationPropertiesUtil.getConfigProperties("Wechat.CustomService.AddCustomeAccountUrl");
-		Map<String, Object> requestParametersMap = new AnnotationAnalysis<CustomServiceData>()
+		Map<String, String> requestParametersMap = new AnnotationAnalysis<CustomServiceData>()
 				.getRequestParametersMap(CustomServiceData.class, customServiceData);
-		String result = CommonHttpProtocolRequestUtil.requestWithPost(addUrl, requestParametersMap);
-		return JSONObject.fromString(result);
+		//String result = CommonHttpProtocolRequestUtil.requestWithPost(addUrl, requestParametersMap);
+		//return JSONObject.fromString(result);
+		return null;
 	}
 
 	// public static void main(String[] args) throws WechatException {
@@ -88,7 +89,7 @@ public class WechatServiceImpl implements IWechatService {
 		JSONObject params = new JSONObject();
 		List<JSONObject> jsonObjects = new ArrayList<>();
 		for (ArticlesData articlesData : articlesDatas) {
-			Map<String, Object> requestParametersMap = new AnnotationAnalysis<ArticlesData>()
+			Map<String, String> requestParametersMap = new AnnotationAnalysis<ArticlesData>()
 					.getRequestParametersMap(ArticlesData.class, articlesData);
 			System.out.println(requestParametersMap);
 		}

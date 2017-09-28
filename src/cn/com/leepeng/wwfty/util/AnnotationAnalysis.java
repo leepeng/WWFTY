@@ -9,13 +9,14 @@ import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import cn.com.leepeng.wwfty.annotation.wechat.Data;
-import cn.com.leepeng.wwfty.annotation.wechat.DataParam;
+import cn.com.leepeng.wwfty.annotation.Data;
+import cn.com.leepeng.wwfty.annotation.DataParam;
 import cn.com.leepeng.wwfty.schema.facebook.FacebookData;
 import cn.com.leepeng.wwfty.schema.facebook.FacebookIndividualVideo;
 import cn.com.leepeng.wwfty.schema.wechat.ArticlesData;
 import cn.com.leepeng.wwfty.schema.wechat.CustomServiceData;
 import cn.com.leepeng.wwfty.schema.weibo.AOauth2Token;
+import cn.com.leepeng.wwfty.schema.weibo.MediaData;
 
 /**
  * 参数封装数据类注解解析器
@@ -37,10 +38,10 @@ public class AnnotationAnalysis<T> {
 	 *            设置值后的数据
 	 * @return 根据注解返回封装好的参数
 	 */
-	public Map<String, Object> getRequestParametersMap(Class<?> clazz, T data) {
-		Map<String, Object> _paramsMap = null;
+	public Map<String, String> getRequestParametersMap(Class<?> clazz, T data) {
+		Map<String, String> _paramsMap = null;
 		try {
-			_paramsMap = new LinkedHashMap<String, Object>();
+			_paramsMap = new LinkedHashMap<String, String>();
 			if (clazz.isAnnotationPresent(Data.class)) {
 				Field[] fields = clazz.getDeclaredFields();
 				for (Field field : fields) {
@@ -67,8 +68,11 @@ public class AnnotationAnalysis<T> {
 							}else if(data instanceof AOauth2Token){
 								AOauth2Token aOauth2 = (AOauth2Token) data;
 								value = clazz.getDeclaredMethod(_target_method).invoke(aOauth2.clone());
+							}else if(data instanceof MediaData){
+								MediaData mediaData = (MediaData) data;
+								value = clazz.getDeclaredMethod(_target_method).invoke(mediaData.clone());
 							}
-							_paramsMap.put(dataParam.value(), (!"".equals(value) && value != null) ? value : "");
+							_paramsMap.put(dataParam.value(), (!"".equals(value) && value != null) ? value.toString() : "");
 						}
 					}
 				}
