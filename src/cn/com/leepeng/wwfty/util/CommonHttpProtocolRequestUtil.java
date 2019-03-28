@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -280,7 +282,6 @@ public class CommonHttpProtocolRequestUtil {
 		try {
 			HttpPost httppost = new HttpPost(url);
 			FileBody binFileBody = new FileBody(new File(localFilePath));
-
 			MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
 			// add the file params
 			multipartEntityBuilder.addPart(serverFieldName, binFileBody);
@@ -290,6 +291,50 @@ public class CommonHttpProtocolRequestUtil {
 			HttpEntity reqEntity = multipartEntityBuilder.build();
 			httppost.setEntity(reqEntity);
 
+			response = httpclient.execute(httppost);
+			System.out.println(response.getStatusLine());
+			resEntity = response.getEntity();
+			respStr = getRespString(resEntity);
+			EntityUtils.consume(resEntity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (httpclient != null) {
+					httpclient.close();
+				}
+				if (response != null) {
+					response.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return respStr;
+
+	}
+	public static String postFile(String url, String serverFieldName, List<String> localFilePath,
+			Map<String, String> params) {
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		String respStr = null;
+		HttpEntity resEntity = null;
+		CloseableHttpResponse response = null;
+		try {
+			HttpPost httppost = new HttpPost(url);
+			
+			MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+			for (String string : localFilePath) {
+				FileBody binFileBody = new FileBody(new File(string));
+				multipartEntityBuilder.addPart(serverFieldName, binFileBody);
+				
+			}
+			httppost.addHeader("Authorization", "Bearer Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJlY2hpc2FuIiwic3ViIjoie1wiY2xpZW50XCI6XCJ3ZWJcIixcInR5cGVcIjpcInVzZXJcIixcIm5hbWVcIjpcImFkbWluXCIsXCJzaWduYXR1cmVcIjpudWxsfSIsImlhdCI6MTU1Mzc2MDk5NywiZXhwIjoxNTUzNzc4OTk3fQ.XASkykHI5yjwY8lyGwcCiRuFuLaqBVY6w6xwzXDWhwVlgIiK9kjv3mcw9sv49Ih-q0mI5MK2y3zfsLICLkieVw");
+			// add the file params
+			// 设置上传的其他参数
+			setUploadParams(multipartEntityBuilder, params);
+			HttpEntity reqEntity = multipartEntityBuilder.build();
+			httppost.setEntity(reqEntity);
 			response = httpclient.execute(httppost);
 			System.out.println(response.getStatusLine());
 			resEntity = response.getEntity();
@@ -405,6 +450,19 @@ public class CommonHttpProtocolRequestUtil {
 			}
 		}
 		return sb.toString();
+	}
+	
+	public static void main(String[] args) {
+		List<String> fiept = new ArrayList<>();
+		fiept.add("C:\\Users\\Alex.Lee\\Pictures\\photo-1498932042873-e35fb6535a02.jpg");
+		fiept.add("C:\\Users\\Alex.Lee\\Pictures\\new.jpg");
+		Map<String, String> params = new HashMap<>();
+		params.put("content", "11122223112");
+		params.put("title", "XXXXXXXXXX");
+		params.put("catalogID", "15162");
+		params.put("hasFile", "true");
+		String postFile = postFile("http://47.94.198.40/zcms/api/articles/replace", "attachments", fiept, params);
+		System.out.println(postFile);
 	}
 
 }

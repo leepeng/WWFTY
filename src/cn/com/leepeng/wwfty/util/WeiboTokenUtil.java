@@ -60,14 +60,14 @@ public class WeiboTokenUtil {
 			}
 		}
 		String authorizeUrl = null;
-		Map<String, Object> requestParametersMap = null;
+		Map<String, String> requestParametersMap = null;
 		AOauth2Token.OAuthResult authResult = null;
 		WeiboInvokeAPIResult apiResult = null;
 		try {
 			authorizeUrl = ConfigurationPropertiesUtil.getConfigProperties("weibo.api.oauth2.authorize.token");
 			requestParametersMap = new AnnotationAnalysis<AOauth2Token>().getRequestParametersMap(AOauth2Token.class,
 					oauth2Token);
-			authorizeUrl = ParameterUtil.endUrlAppendParams(authorizeUrl, requestParametersMap);
+			//authorizeUrl = ParameterUtil.endUrlAppendParams(authorizeUrl, requestParametersMap);
 			String result = CommonHttpProtocolRequestUtil.requestWithPost(authorizeUrl, new HashMap<String,Object>());
 			if (StringUtils.isNotEmpty(result)) {
 				JSONObject resultObject = JSONObject.fromString(result);
